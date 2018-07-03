@@ -30,9 +30,30 @@ class TradeController extends HTTPController {
       return new Response.ok(databaseTrade);
     }
 
+    @httpGet
+    Future<Response> getMyTrades(@HTTPPath("index")int index) async {
+
+      var tradeQuery = new Query<Trade>()
+      ..join(object: (trade) => trade.user)
+      ..where.user.index = whereEqualTo(index);
+
+      var databaseTrade = await tradeQuery.fetch();
+
+      if (databaseTrade == null) {
+        return new Response.notFound();
+      }
+      return new Response.ok(databaseTrade);
+    }
+
     @httpPost
     Future<Response> addTrade(@HTTPBody() Trade trade) async {
-      var query = new Query<Trade>()..values = trade;
+      var query = new Query<Trade>();
+      query.values.itemName = trade.itemName;
+      query.values.quantity = trade.quantity;
+      query.values.value = trade.value;
+      query.values.isSell = trade.isSell;
+      query.values.user.index = trade.user.index;
+
       return new Response.ok(await query.insert());
     }
 

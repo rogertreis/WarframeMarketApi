@@ -1,7 +1,25 @@
 import '../my_project.dart';
 import 'package:my_project/model/trade.dart';
 
-class User extends ManagedObject<_User> implements _User {}
+class User extends ManagedObject<_User> implements _User {
+
+  @override
+  void readFromMap(Map<String, dynamic> requestBody) {
+    email = requestBody["email"];
+    password = requestBody["password"];
+    nickname = requestBody["nickname"];
+  }
+
+  @override
+  Map<String, dynamic> asMap() {
+    return {
+      "email": email,
+      "password": password,
+      "nickname": nickname
+    };
+  }
+
+}
 
 class _User {
   @managedPrimaryKey
@@ -17,4 +35,6 @@ class _User {
   String nickname;
 
   ManagedSet<Trade> trade;
+
+  
 }

@@ -21,8 +21,14 @@ class UserController extends HTTPController {
   }
 
   @httpPost
-  Future<Response> addUser(@HTTPBody() User user) async {
-    var query = new Query<User>()..values = user;
+  Future<Response> addUser(@HTTPBody() String email, String password, String nickname) async {
+
+    User u = new User();
+    u.email = email;
+    u.password = password;
+    u.nickname = nickname;
+    
+    var query = new Query<User>()..values = u;
     return new Response.ok(await query.insert());
   }
 }
